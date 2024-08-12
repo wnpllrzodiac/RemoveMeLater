@@ -46,7 +46,7 @@ jobs:
           BUILD_TOOLS_VERSION: "34.0.0"
         
     - name: Rename apk
-      run: mv ${{steps.sign_app.outputs.signedReleaseFile}} JuicePlayer-arm-release.apk
+      run: mv ${{steps.sign_app.outputs.signedReleaseFile}} RemoveMeLater-arm-release.apk
         # working-directory: ./temp
         # shell: bash
     
@@ -62,5 +62,4 @@ jobs:
         generate_release_notes: true
         prerelease: true
         files: |
-           app/build/outputs/apk/release/app-release.apk
-           app/build/outputs/bundle/release/app-release.aab
+           app/build/outputs/apk/release/RemoveMeLater-arm-release.apk
