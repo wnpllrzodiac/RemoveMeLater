@@ -11,8 +11,8 @@ android {
         applicationId = "ga.iloveyaya.removemelater"
         minSdk = 24
         targetSdk = 33
-        versionCode = 2
-        versionName = "2.0"
+        versionCode = 104
+        versionName = "1.0.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
