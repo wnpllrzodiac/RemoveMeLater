@@ -49,10 +49,20 @@ jobs:
       run: mv ${{steps.sign_app.outputs.signedReleaseFile}} JuicePlayer-arm-release.apk
         # working-directory: ./temp
         # shell: bash
-
-    # Noted For Output [main_project_module]/build/outputs/apk/release/
-    - name: Upload APK Release - ${{ env.repository_name }}
+    
+    - name: Upload Release Build to Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) release generated
-        path: ${{ env.main_project_module }}/build/outputs/apk/release/
+        name: release-artifacts
+        paths: |
+          app/build/outputs/apk/release/
+          app/build/outputs/bundle/release/
+             
+    - name: Create Github Release
+      uses: softprops/action-gh-release@v1
+      with:
+        generate_release_notes: true
+        prerelease: true
+        files: |
+           app/build/outputs/apk/release/app-release.apk
+           app/build/outputs/bundle/release/app-release.aab
