@@ -1,0 +1,1 @@
+curl -X POST --Header "Authorization: Bearer ya29.c.c0ASRxxxx" --Header "Content-Type: application/json" -d "{\"message\":{\"token\":\"cKDqlkExxxxxx\",\"notification\":{\"title\":\"NewContent\",\"body\":\"Anewvideohasbeenuploaded.\"}}}" https://fcm.googleapis.com/v1/projects/bibo-3622b/messages:send
