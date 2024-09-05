@@ -33,6 +33,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.i(TAG, "onCreate")
+
         askNotificationPermission()
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -45,7 +47,7 @@ class MainActivity : ComponentActivity() {
             val token = task.result
 
             // Log and toast
-            val msg = getString(R.string.msg_token_fmt, token)
+            //val msg = getString(R.string.msg_token_fmt, token)
             Log.i(TAG, "fcm_token got: $token")
             findViewById<TextView>(R.id.tv_fire_token).text = token.toString()
             // cKDqlkENTmS1UEhqmRNRj8:APA91bHjm5KT7RbOEYRrQmtWa6lJzK6nNO6lv4CZ5QvUvs9yE0SvZr5JrTo84TR-eoUgKe90m9w5Rj7evhNiNc5ud5GpNMpaAgximYcDA8i7i3lGVny-0oGe39CxC65Z_tXasU5Qpehm
@@ -61,8 +63,19 @@ class MainActivity : ComponentActivity() {
         findViewById<Button>(R.id.btn_copy_token).setOnClickListener {
             val tvToken = findViewById<TextView>(R.id.tv_fire_token)
             saveToClipboard(tvToken.text.toString())
-            Toast.makeText(this, "TOKEN已粘贴", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "TOKEN已复制到粘贴板", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        Log.i(TAG, "onResume")
+
+        val title = intent?.getStringExtra("title")
+        val body = intent?.getStringExtra("body")
+        if (title != null && body != null)
+            findViewById<TextView>(R.id.tv_notification).text = title + "\n" + body
     }
 
     private fun getClipboardContent(): String? {
