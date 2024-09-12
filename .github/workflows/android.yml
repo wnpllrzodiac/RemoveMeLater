@@ -57,7 +57,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: release-artifacts
-        path: app/build/outputs/apk/release/
+        path: app/build/outputs/apk/release/RemoveMeLater-arm-release.apk
              
     - name: Create Github Release
       uses: softprops/action-gh-release@v1

@@ -3,7 +3,6 @@ package ga.iloveyaya.removemelater
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
@@ -12,7 +11,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import java.util.Calendar
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -36,12 +34,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
+            if (remoteMessage.data.containsKey("title"))
+                remoteMessage.data["body"]?.let { sendNotification(remoteMessage.data["title"], it) }
         }
-
-        // Check if message contains a notification payload.
-        remoteMessage.notification?.let {
-            Log.d(TAG, "Message Notification Body: ${it.body}")
-            it.body?.let { body -> sendNotification(it.title, body) }
+        else {
+            // Check if message contains a notification payload.
+            remoteMessage.notification?.let {
+                // when app is background, notification will be received by system and display, won't be called here
+                // so we cannot use messaging.Notification to send message if we want a notification click to activity to check detail
+                Log.d(TAG, "Message Notification Body: ${it.body}")
+                it.body?.let { body -> sendNotification(it.title, body) }
+            }
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -58,15 +61,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.i(TAG, "sendNotification: $title $messageBody")
 
         val requestCode = 0
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("title", title)
         intent.putExtra("body", messageBody)
         val pendingIntent = PendingIntent.getActivity(
             this,
             requestCode,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
         val channelId = "generic" //getString(R.string.default_notification_channel_id)

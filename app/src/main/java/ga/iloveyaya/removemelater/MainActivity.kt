@@ -4,28 +4,19 @@ import android.Manifest
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
-import ga.iloveyaya.removemelater.ui.theme.RemoveMeLaterTheme
 
 class MainActivity : ComponentActivity() {
     private var TAG:String = "MainActivity"
@@ -65,6 +56,8 @@ class MainActivity : ComponentActivity() {
             saveToClipboard(tvToken.text.toString())
             Toast.makeText(this, "TOKEN已复制到粘贴板", Toast.LENGTH_SHORT).show()
         }
+
+        handleIntent(intent)
     }
 
     override fun onResume() {
@@ -72,8 +65,19 @@ class MainActivity : ComponentActivity() {
 
         Log.i(TAG, "onResume")
 
-        val title = intent?.getStringExtra("title")
-        val body = intent?.getStringExtra("body")
+        handleIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        intent.extras?.getString("title")
+        val title = intent.getStringExtra("title")
+        val body = intent.getStringExtra("body")
         if (title != null && body != null)
             findViewById<TextView>(R.id.tv_notification).text = title + "\n" + body
     }

@@ -23,11 +23,22 @@ cred = credentials.Certificate("XXX.json")
 default_app = firebase_admin.initialize_app(credential=cred)
  
 message = messaging.Message(
-    notification=messaging.Notification(
-        title='This is a Notification Title 1111',
-        body='This is a Notification Body 2222',
-    ),
-    token=mytoken
+    # onMessageReceived not triggered when notification sent to android and app is running background
+    #notification=messaging.Notification(
+    #    title='This is a Notification Title 1111',
+    #    body='This is a Notification Body 2222',
+    #),
+    data = {
+        'title' :'This is a Notification Title 1111',
+        'body': 'This is a Notification Body 2222',
+        "fromNotification":"true",
+        'key1': 'value1',
+        'key2': 'value2'
+    },
+    token=mytoken,
+    android=messaging.AndroidConfig(
+        priority='high'
+    )
 )
 
 # Send the message
