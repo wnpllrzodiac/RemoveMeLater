@@ -8,15 +8,30 @@ from firebase_admin import messaging
 import google
 from google.oauth2 import service_account
 
-mytoken = 'cPxxxx'
+mytoken = 'cPxf'
 
 cred = credentials.Certificate("xxx.json")
 default_app = firebase_admin.initialize_app(credential=cred)
 
+# http://127.0.0.1:9381/fcmproxy/
+#location ~ ^/fcmproxy/(.*) {
+#    proxy_pass http://127.0.0.1:9965/$1$is_args/$args;
+#}
+
 class HelloWorld(object):
     @cherrypy.expose
     def index(self):
-        return "Hello World!"
+        return """
+        <html>
+        <body>
+        <form method="post" action="sendmsg">
+            Title: <input type="text" name="title">
+            Body: <input type="text" name="body">
+            <input type="submit" value="Submit">
+        </form>
+        </body>
+        </html>
+        """
     index.exposed = True
     
     @cherrypy.expose
