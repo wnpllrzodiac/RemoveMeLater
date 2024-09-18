@@ -9,6 +9,7 @@ import google
 from google.oauth2 import service_account
 
 mytoken = 'cPxf'
+my_topic='general'
 
 cred = credentials.Certificate("xxx.json")
 default_app = firebase_admin.initialize_app(credential=cred)
@@ -47,7 +48,8 @@ class HelloWorld(object):
                 'key1': 'value1',
                 'key2': 'value2'
             },
-            token=mytoken,
+            #token=mytoken,
+            topic=my_topic,
             android=messaging.AndroidConfig(
                 priority='high'
             )
