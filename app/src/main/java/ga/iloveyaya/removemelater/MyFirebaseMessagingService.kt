@@ -33,6 +33,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
+            // refer to https://stackoverflow.com/questions/53844716/cant-get-extras-from-intent-when-application-is-in-background
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
             if (remoteMessage.data.containsKey("title"))
                 remoteMessage.data["body"]?.let { sendNotification(remoteMessage.data["title"], it) }

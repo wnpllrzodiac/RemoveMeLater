@@ -66,5 +66,11 @@ class HelloWorld(object):
     def generate(self, length=8):
         return ''.join(random.sample(string.hexdigits, int(length)))
 
+# fix python consume high CPU usage while idle
+# https://stackoverflow.com/questions/45888452/cherrypy-quickstart-consuming-high-cpu-usage-while-idle
+# ll /proc/${PID}/cmdline
+# strace -f -p ${PID}
+cherrypy.config.update({'engine.autoreload.on' : False})
+
 cherrypy.config.update({'server.socket_port': 9965})
 cherrypy.quickstart(HelloWorld())
